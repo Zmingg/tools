@@ -1,0 +1,113 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+<div style="width:900PX">
+<div id="slider">
+<ul id="list" style="">
+<li class="active">
+	<img src="img/bing-1.jpg" alt="1" />
+	<div class="title">QC BLOG —— 为WEB艺术家创造的PHP框架</div>
+</li>
+<li>
+	<img src="img/bing-2.jpg" alt="2" />
+	<div class="title">Laravel —— 为WEB艺术家创造的PHP框架</div>
+</li>
+<li><img src="img/bing-3.jpg" alt="3" /></li>
+</ul>
+<ol id="slider-control">
+	<li class="active"><a href="#">1</a></li>
+	<li><a href="#">2</a></li>
+	<li><a href="#">3</a></li>
+</ol>
+
+</div>
+	
+</div>
+
+</body>
+</html>
+<script type="text/javascript">
+window.onload = function(){
+
+	var interval = 3000; // set interval
+	var transition = '1s';  // set transitionDuration
+
+	var slider = document.getElementById('slider');
+	var list = document.getElementById('list');
+	var lis = list.getElementsByTagName('li');
+	var nav = document.getElementById('slider-control').getElementsByTagName('li');
+	var count = lis.length;
+	var wid = slider.clientWidth;  // 得到位移宽度	
+
+
+	for (var i = 0; i < count; i++) {
+
+		lis[i].style.width=wid+"px";  // 渲染所有li宽度
+
+		//  循环绑定nav.onclick事件
+		(function(j){	
+	        nav[j].childNodes[0].onclick=function(){
+	        	index = j+1;
+	        	show(index);
+	        }
+		})(i);
+	};
+
+	// Clone最后一个li
+	list.appendChild(lis[0].cloneNode(true));
+
+	play();
+
+	// 循环播放
+	function play(){
+
+		index=1;
+
+		list.addEventListener("transitionend", function(){
+			if (index>count) {
+				list.style.transitionDuration="0s";	
+				list.style.transform="translate("+0+"px)";
+				index = 1;
+				setTimeout(function(){
+					list.style.transitionDuration=transition;	
+				},100);
+			};												
+		});
+
+		setInterval(function () {
+			index++;
+			show(index);
+		},interval);		
+				
+	}
+
+	// 指定播放动作 id：li(img)序号
+	function show(id){
+		// 遍历修改active
+		for (var i = 0; i < count; i++) {
+			if(i==id-1){
+				nav[i].setAttribute('class','active');
+				lis[i].setAttribute('class','active');
+			}else{
+				if (id>count) {
+					nav[0].setAttribute('class','active');
+					lis[0].setAttribute('class','active');
+				};
+				nav[i].setAttribute('class','');
+				lis[i].setAttribute('class','');
+			}
+		};
+		
+		// 计算偏移x
+		var x=-(id-1)*wid;
+		list.style.transitionDuration=transition;	
+		list.style.transform="translate("+x+"px)";
+	}
+	
+
+}
+</script>
